@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>游戏远程控制</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Token 连接区域（未连接时显示） -->
+  <div id="connect-panel">
+    <div class="connect-box">
+      <h2>游戏远程控制</h2>
+      <input id="token-input" type="password" placeholder="请输入 Token" autocomplete="off">
+      <button id="connect-btn">连接</button>
+      <p id="connect-error" class="error-text"></p>
+    </div>
+  </div>
+
+  <!-- 主界面（连接后显示） -->
+  <div id="main-panel" class="hidden">
+    <canvas id="game-canvas"></canvas>
+
+    <!-- 底部固定工具栏 -->
+    <div id="toolbar">
+      <div class="toolbar-row">
+        <button id="launch-btn" class="btn-launch">启动游戏</button>
+        <span id="status-dot" class="status-dot disconnected" title="未连接"></span>
+      </div>
+      <div class="toolbar-row">
+        <input id="text-input" type="text" placeholder="输入文字..." autocomplete="off">
+        <button id="send-btn">发送</button>
+      </div>
+      <div class="toolbar-row key-row">
+        <button class="btn-key" data-key="Return">Enter</button>
+        <button class="btn-key" data-key="BackSpace">⌫</button>
+        <button class="btn-key" data-key="Tab">Tab</button>
+        <button class="btn-key" data-key="Escape">Esc</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

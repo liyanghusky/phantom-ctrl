@@ -1,0 +1,201 @@
+/* ── 重置 & 基础 ──────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #111;
+  color: #f0f0f0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  /* 禁止页面缩放（微信/Safari 双指手势） */
+  touch-action: pan-x pan-y;
+}
+
+/* ── 连接面板 ─────────────────────────────────────────────────────────── */
+#connect-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 24px;
+}
+
+.connect-box {
+  width: 100%;
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.connect-box h2 {
+  text-align: center;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.connect-box input {
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid #444;
+  background: #222;
+  color: #fff;
+  font-size: 16px;
+  outline: none;
+}
+
+.connect-box input:focus {
+  border-color: #4a9eff;
+}
+
+.connect-box button {
+  padding: 13px;
+  border-radius: 8px;
+  border: none;
+  background: #4a9eff;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  min-height: 44px;
+}
+
+.connect-box button:active {
+  background: #2a7edf;
+}
+
+.error-text {
+  color: #ff5f5f;
+  font-size: 13px;
+  text-align: center;
+  min-height: 18px;
+}
+
+/* ── 主面板 ───────────────────────────────────────────────────────────── */
+#main-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* ── Canvas ───────────────────────────────────────────────────────────── */
+#game-canvas {
+  display: block;
+  background: #000;
+  touch-action: none; /* 阻止浏览器默认手势，确保触摸坐标准确 */
+  cursor: crosshair;
+  flex-shrink: 0;
+}
+
+/* ── 底部工具栏 ───────────────────────────────────────────────────────── */
+#toolbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #1a1a1a;
+  border-top: 1px solid #333;
+  padding: 8px 10px;
+  /* 安全区域适配（iPhone 刘海/底部横条） */
+  padding-bottom: calc(8px + env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 100;
+}
+
+.toolbar-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ── 启动游戏按钮 ─────────────────────────────────────────────────────── */
+.btn-launch {
+  flex: 1;
+  min-height: 44px;
+  border: none;
+  border-radius: 8px;
+  background: #2ea84a;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-launch:active { background: #228b3c; }
+.btn-launch:disabled { background: #3a5a40; color: #888; }
+
+/* ── 状态指示点 ───────────────────────────────────────────────────────── */
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.status-dot.connected    { background: #2ea84a; box-shadow: 0 0 6px #2ea84a; }
+.status-dot.disconnected { background: #888; }
+
+/* ── 文字输入行 ───────────────────────────────────────────────────────── */
+#text-input {
+  flex: 1;
+  min-height: 44px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 1px solid #444;
+  background: #2a2a2a;
+  color: #fff;
+  font-size: 15px;
+  outline: none;
+}
+
+#text-input:focus { border-color: #4a9eff; }
+
+#send-btn {
+  min-height: 44px;
+  padding: 0 18px;
+  border: none;
+  border-radius: 8px;
+  background: #4a9eff;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+#send-btn:active { background: #2a7edf; }
+
+/* ── 功能键行 ─────────────────────────────────────────────────────────── */
+.key-row {
+  justify-content: space-between;
+}
+
+.btn-key {
+  flex: 1;
+  min-height: 44px;
+  border: 1px solid #444;
+  border-radius: 8px;
+  background: #2a2a2a;
+  color: #ddd;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.btn-key:active {
+  background: #3a3a3a;
+  border-color: #666;
+}
