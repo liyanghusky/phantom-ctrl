@@ -17,6 +17,7 @@
   const textInput    = document.getElementById('text-input');
   const sendBtn      = document.getElementById('send-btn');
   const statusDot    = document.getElementById('status-dot');
+  const statusLabel  = document.getElementById('status-label');
 
   // ── 初始化：已有 token 时直接进主界面 ─────────────────────────────────
   if (token) {
@@ -88,6 +89,7 @@
 
   function setStatus(state) {
     statusDot.className = `status-dot ${state}`;
+    statusLabel.textContent = state === 'connected' ? '已连接' : '未连接';
   }
 
   // ── canvas 尺寸自适应（16:9） ──────────────────────────────────────────

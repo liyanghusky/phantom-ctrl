@@ -4,37 +4,46 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <title>游戏远程控制</title>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Phantom Ctrl</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- Token 连接区域（未连接时显示） -->
+  <!-- 连接页 -->
   <div id="connect-panel">
     <div class="connect-box">
-      <h2>游戏远程控制</h2>
-      <input id="token-input" type="password" placeholder="请输入 Token" autocomplete="off">
-      <button id="connect-btn">连接</button>
+      <div class="connect-logo">
+        <span class="icon">👻</span>
+        <h1>Phantom Ctrl</h1>
+        <p>远程游戏控制台</p>
+      </div>
+      <div class="input-group">
+        <input id="token-input" type="password" placeholder="粘贴访问 Token" autocomplete="off">
+      </div>
+      <button id="connect-btn" class="btn-connect">连接</button>
       <p id="connect-error" class="error-text"></p>
     </div>
   </div>
 
-  <!-- 主界面（连接后显示） -->
+  <!-- 主界面 -->
   <div id="main-panel" class="hidden">
     <canvas id="game-canvas"></canvas>
 
-    <!-- 底部固定工具栏 -->
     <div id="toolbar">
       <div class="toolbar-row">
-        <button id="launch-btn" class="btn-launch">启动游戏</button>
-        <span id="status-dot" class="status-dot disconnected" title="未连接"></span>
+        <button id="launch-btn" class="btn-launch">🎮 启动游戏</button>
+        <div class="status-area">
+          <span id="status-dot" class="status-dot disconnected"></span>
+          <span id="status-label" class="status-label">未连接</span>
+        </div>
       </div>
       <div class="toolbar-row">
-        <input id="text-input" type="text" placeholder="输入文字..." autocomplete="off">
+        <input id="text-input" type="text" placeholder="输入账号 / 密码..." autocomplete="off">
         <button id="send-btn">发送</button>
       </div>
       <div class="toolbar-row key-row">
-        <button class="btn-key" data-key="enter">Enter</button>
+        <button class="btn-key" data-key="enter">↵ Enter</button>
         <button class="btn-key" data-key="backspace">⌫</button>
         <button class="btn-key" data-key="tab">Tab</button>
         <button class="btn-key" data-key="escape">Esc</button>

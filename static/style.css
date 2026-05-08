@@ -1,4 +1,3 @@
-/* ── 重置 & 基础 ──────────────────────────────────────────────────────── */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -10,20 +9,25 @@ html, body {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: #111;
-  color: #f0f0f0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
-  /* 禁止页面缩放（微信/Safari 双指手势） */
+  background: #0a0a0f;
+  color: #e8e8f0;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
   touch-action: pan-x pan-y;
 }
 
-/* ── 连接面板 ─────────────────────────────────────────────────────────── */
+.hidden { display: none !important; }
+
+/* ── 连接页 ───────────────────────────────────────────────────────────── */
 #connect-panel {
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100%;
-  padding: 24px;
+  padding: 32px 24px;
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(99, 66, 255, 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, rgba(0, 212, 255, 0.10) 0%, transparent 50%),
+    #0a0a0f;
 }
 
 .connect-box {
@@ -31,88 +35,127 @@ html, body {
   max-width: 360px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 32px 24px;
+  backdrop-filter: blur(20px);
 }
 
-.connect-box h2 {
+.connect-logo {
   text-align: center;
-  font-size: 20px;
-  font-weight: 600;
+  margin-bottom: 4px;
 }
 
-.connect-box input {
-  padding: 12px 14px;
-  border-radius: 8px;
-  border: 1px solid #444;
-  background: #222;
+.connect-logo .icon {
+  font-size: 48px;
+  display: block;
+  margin-bottom: 12px;
+  filter: drop-shadow(0 0 20px rgba(99, 66, 255, 0.6));
+}
+
+.connect-logo h1 {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  background: linear-gradient(135deg, #a78bff, #00d4ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.connect-logo p {
+  font-size: 13px;
+  color: rgba(255,255,255,0.35);
+  margin-top: 4px;
+}
+
+.input-group {
+  position: relative;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.05);
   color: #fff;
-  font-size: 16px;
+  font-size: 15px;
   outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  letter-spacing: 0.5px;
 }
 
-.connect-box input:focus {
-  border-color: #4a9eff;
+.input-group input:focus {
+  border-color: rgba(99, 66, 255, 0.6);
+  box-shadow: 0 0 0 3px rgba(99, 66, 255, 0.15);
 }
 
-.connect-box button {
-  padding: 13px;
-  border-radius: 8px;
+.input-group input::placeholder { color: rgba(255,255,255,0.25); }
+
+.btn-connect {
+  width: 100%;
+  padding: 15px;
+  border-radius: 12px;
   border: none;
-  background: #4a9eff;
+  background: linear-gradient(135deg, #6342ff, #00d4ff);
   color: #fff;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
-  min-height: 44px;
+  letter-spacing: 0.5px;
+  transition: opacity 0.2s, transform 0.1s;
+  min-height: 50px;
+  box-shadow: 0 4px 20px rgba(99, 66, 255, 0.35);
 }
 
-.connect-box button:active {
-  background: #2a7edf;
+.btn-connect:active {
+  opacity: 0.85;
+  transform: scale(0.98);
 }
 
 .error-text {
-  color: #ff5f5f;
-  font-size: 13px;
+  color: #ff6b6b;
+  font-size: 12px;
   text-align: center;
-  min-height: 18px;
+  min-height: 16px;
 }
 
-/* ── 主面板 ───────────────────────────────────────────────────────────── */
+/* ── 主界面 ───────────────────────────────────────────────────────────── */
 #main-panel {
   display: flex;
   flex-direction: column;
   align-items: center;
   height: 100%;
-}
-
-.hidden {
-  display: none !important;
+  background: #000;
 }
 
 /* ── Canvas ───────────────────────────────────────────────────────────── */
 #game-canvas {
   display: block;
   background: #000;
-  touch-action: none; /* 阻止浏览器默认手势，确保触摸坐标准确 */
+  touch-action: none;
   cursor: crosshair;
   flex-shrink: 0;
 }
 
-/* ── 底部工具栏 ───────────────────────────────────────────────────────── */
+/* ── 工具栏 ───────────────────────────────────────────────────────────── */
 #toolbar {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  background: #1a1a1a;
-  border-top: 1px solid #333;
-  padding: 8px 10px;
-  /* 安全区域适配（iPhone 刘海/底部横条） */
-  padding-bottom: calc(8px + env(safe-area-inset-bottom));
+  background: rgba(12, 12, 18, 0.97);
+  border-top: 1px solid rgba(255,255,255,0.07);
+  padding: 10px 12px;
+  padding-bottom: calc(10px + env(safe-area-inset-bottom));
   display: flex;
   flex-direction: column;
   gap: 8px;
   z-index: 100;
+  backdrop-filter: blur(20px);
 }
 
 .toolbar-row {
@@ -121,81 +164,123 @@ html, body {
   gap: 8px;
 }
 
-/* ── 启动游戏按钮 ─────────────────────────────────────────────────────── */
+/* ── 顶部行：启动 + 状态 ──────────────────────────────────────────────── */
 .btn-launch {
   flex: 1;
-  min-height: 44px;
+  min-height: 42px;
   border: none;
-  border-radius: 8px;
-  background: #2ea84a;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #1a8c3a, #22c45a);
   color: #fff;
-  font-size: 15px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 700;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  box-shadow: 0 2px 12px rgba(34, 196, 90, 0.25);
+  transition: opacity 0.15s, transform 0.1s;
 }
 
-.btn-launch:active { background: #228b3c; }
-.btn-launch:disabled { background: #3a5a40; color: #888; }
+.btn-launch:active { opacity: 0.8; transform: scale(0.97); }
+.btn-launch:disabled { background: #1e2e22; color: #4a6a50; box-shadow: none; }
 
-/* ── 状态指示点 ───────────────────────────────────────────────────────── */
+/* 状态指示区 */
+.status-area {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 10px;
+  min-height: 42px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 10px;
+}
+
 .status-dot {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   flex-shrink: 0;
+  transition: background 0.3s, box-shadow 0.3s;
 }
 
-.status-dot.connected    { background: #2ea84a; box-shadow: 0 0 6px #2ea84a; }
-.status-dot.disconnected { background: #888; }
-
-/* ── 文字输入行 ───────────────────────────────────────────────────────── */
-#text-input {
-  flex: 1;
-  min-height: 44px;
-  padding: 0 12px;
-  border-radius: 8px;
-  border: 1px solid #444;
-  background: #2a2a2a;
-  color: #fff;
-  font-size: 15px;
-  outline: none;
+.status-dot.connected {
+  background: #22c45a;
+  box-shadow: 0 0 8px #22c45a;
+  animation: pulse 2s infinite;
 }
 
-#text-input:focus { border-color: #4a9eff; }
+.status-dot.disconnected { background: #444; }
 
-#send-btn {
-  min-height: 44px;
-  padding: 0 18px;
-  border: none;
-  border-radius: 8px;
-  background: #4a9eff;
-  color: #fff;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 6px #22c45a; }
+  50%       { box-shadow: 0 0 12px #22c45a; }
+}
+
+.status-label {
+  font-size: 12px;
+  color: rgba(255,255,255,0.4);
   white-space: nowrap;
 }
 
-#send-btn:active { background: #2a7edf; }
-
-/* ── 功能键行 ─────────────────────────────────────────────────────────── */
-.key-row {
-  justify-content: space-between;
+/* ── 输入行 ───────────────────────────────────────────────────────────── */
+#text-input {
+  flex: 1;
+  min-height: 42px;
+  padding: 0 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.05);
+  color: #fff;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s;
 }
+
+#text-input:focus {
+  border-color: rgba(99, 66, 255, 0.5);
+}
+
+#text-input::placeholder { color: rgba(255,255,255,0.2); }
+
+#send-btn {
+  min-height: 42px;
+  padding: 0 16px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #6342ff, #00d4ff);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.15s, transform 0.1s;
+  box-shadow: 0 2px 10px rgba(99, 66, 255, 0.3);
+}
+
+#send-btn:active { opacity: 0.8; transform: scale(0.97); }
+
+/* ── 功能键 ───────────────────────────────────────────────────────────── */
+.key-row { justify-content: space-between; }
 
 .btn-key {
   flex: 1;
-  min-height: 44px;
-  border: 1px solid #444;
-  border-radius: 8px;
-  background: #2a2a2a;
-  color: #ddd;
-  font-size: 14px;
-  font-weight: 500;
+  min-height: 38px;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.7);
+  font-size: 13px;
+  font-weight: 600;
   cursor: pointer;
+  transition: background 0.1s, transform 0.1s;
+  letter-spacing: 0.2px;
 }
 
 .btn-key:active {
-  background: #3a3a3a;
-  border-color: #666;
+  background: rgba(99, 66, 255, 0.25);
+  border-color: rgba(99, 66, 255, 0.4);
+  transform: scale(0.95);
 }
