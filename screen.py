@@ -15,7 +15,7 @@ def _capture_jpeg() -> bytes:
         monitor = sct.monitors[settings.SCREEN_INDEX]
         raw = sct.grab(monitor)
         img = Image.frombytes("RGB", raw.size, raw.bgra, "raw", "BGRX")
-    img = img.resize((1280, 720), Image.LANCZOS)
+    img = img.resize((1920, 1080), Image.LANCZOS)
     buf = io.BytesIO()
     img.save(buf, format="JPEG", quality=settings.JPEG_QUALITY)
     return buf.getvalue()

@@ -10,6 +10,7 @@ class Settings:
     JPEG_QUALITY: int = int(os.getenv("JPEG_QUALITY", "60"))
     SCREEN_INDEX: int = int(os.getenv("SCREEN_INDEX", "0"))
     GAME_EXE: str = os.getenv("GAME_EXE", "")
+    GAME_WINDOW: str = os.getenv("GAME_WINDOW", "ONLINE")
 
 
 settings = Settings()

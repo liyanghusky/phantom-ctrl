@@ -1,5 +1,7 @@
 (() => {
   // ── 状态 ──────────────────────────────────────────────────────────────
+  const urlToken = new URLSearchParams(location.search).get('token');
+  if (urlToken) sessionStorage.setItem('token', urlToken);
   let token = sessionStorage.getItem('token') || '';
   let ws = null;
   let wsRetryDelay = 1000;

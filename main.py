@@ -1,7 +1,12 @@
 import asyncio
+import io
 import pathlib
+import socket
 import subprocess
+import sys
 from contextlib import asynccontextmanager
+
+import qrcode
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -25,6 +30,24 @@ _capture_task: asyncio.Task | None = None
 async def lifespan(app: FastAPI):
     global _capture_task
     _capture_task = asyncio.create_task(capture_loop())
+
+    ip = socket.gethostbyname(socket.gethostname())
+    token = settings.SECRET_TOKEN
+    url = f"http://{ip}:8000/?token={token}"
+    sep = "=" * 50
+    print(sep)
+    print(f"  Token : {token}")
+    print(f"  URL   : {url}")
+    print()
+    qr = qrcode.QRCode()
+    qr.add_data(url)
+    qr.make()
+    buf = io.StringIO()
+    qr.print_ascii(invert=True, out=buf)
+    sys.stdout.buffer.write(buf.getvalue().encode("utf-8"))
+    sys.stdout.buffer.flush()
+    print(sep)
+
     yield
     if _capture_task:
         _capture_task.cancel()
@@ -109,7 +132,8 @@ async def api_key(payload: KeyPayload):
 @app.post("/api/launch", dependencies=[Depends(require_auth)])
 async def api_launch():
     try:
-        subprocess.Popen([settings.GAME_EXE])
+        game_path = pathlib.Path(settings.GAME_EXE)
+        subprocess.Popen([str(game_path)], cwd=str(game_path.parent))
     except FileNotFoundError:
         raise HTTPException(status_code=500, detail="Game executable not found.")
     except OSError as e:

@@ -1,7 +1,11 @@
 import asyncio
 import re
+import time
 import pyautogui
+import pygetwindow as gw
 import pyperclip
+
+from config import settings
 
 pyautogui.FAILSAFE = True
 
@@ -11,11 +15,27 @@ ALLOWED_BUTTONS = {"left", "right"}
 ALLOWED_KEYS = {"enter", "tab", "escape", "backspace", "space", "up", "down", "left", "right"}
 
 
+def _focus_game_window() -> bool:
+    keyword = settings.GAME_WINDOW
+    if not keyword:
+        return False
+    wins = [w for w in gw.getAllWindows() if keyword.lower() in w.title.lower() and w.title.strip()]
+    if not wins:
+        return False
+    try:
+        wins[0].activate()
+        time.sleep(0.15)
+        return True
+    except Exception:
+        return False
+
+
 def _click(x_ratio: float, y_ratio: float, button: str) -> None:
     if not (0.0 <= x_ratio <= 1.0 and 0.0 <= y_ratio <= 1.0):
         raise ValueError(f"Coordinates must be in [0, 1], got ({x_ratio}, {y_ratio})")
     if button not in ALLOWED_BUTTONS:
         raise ValueError(f"button must be 'left' or 'right', got '{button}'")
+    _focus_game_window()
     x = int(x_ratio * _screen_w)
     y = int(y_ratio * _screen_h)
     pyautogui.click(x, y, button=button)
