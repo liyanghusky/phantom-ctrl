@@ -1,4 +1,5 @@
 import asyncio
+import pathlib
 import subprocess
 from contextlib import asynccontextmanager
 
@@ -9,10 +10,12 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from config import settings
-from auth import require_auth
+from auth import require_auth, verify_token
 from screen import capture_loop
 from ws_manager import manager
 from input_handler import handle_click, handle_type, handle_key
+
+BASE_DIR = pathlib.Path(__file__).parent
 
 
 _capture_task: asyncio.Task | None = None
@@ -36,19 +39,14 @@ app = FastAPI(lifespan=lifespan)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/static", StaticFiles(directory=BASE_DIR / "static"), name="static")
 
 
 # ---------- WebSocket ----------
-
-def verify_token(token: str) -> bool:
-    return token == settings.SECRET_TOKEN
-
 
 @app.websocket("/ws/stream")
 async def ws_stream(ws: WebSocket, token: str = ""):
@@ -84,7 +82,7 @@ class KeyPayload(BaseModel):
 @app.post("/api/click", dependencies=[Depends(require_auth)])
 async def api_click(payload: ClickPayload):
     try:
-        handle_click(payload.x, payload.y, payload.button)
+        await handle_click(payload.x, payload.y, payload.button)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     return {"ok": True}
@@ -93,7 +91,7 @@ async def api_click(payload: ClickPayload):
 @app.post("/api/type", dependencies=[Depends(require_auth)])
 async def api_type(payload: TypePayload):
     try:
-        handle_type(payload.text)
+        await handle_type(payload.text)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     return {"ok": True}
@@ -102,7 +100,7 @@ async def api_type(payload: TypePayload):
 @app.post("/api/key", dependencies=[Depends(require_auth)])
 async def api_key(payload: KeyPayload):
     try:
-        handle_key(payload.key)
+        await handle_key(payload.key)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     return {"ok": True}
@@ -114,8 +112,8 @@ async def api_launch():
         subprocess.Popen([settings.GAME_EXE])
     except FileNotFoundError:
         raise HTTPException(status_code=500, detail="Game executable not found.")
-    except OSError:
-        pass
+    except OSError as e:
+        raise HTTPException(status_code=500, detail=str(e))
     return {"ok": True}
 
 
@@ -123,14 +121,14 @@ async def api_launch():
 async def api_status():
     return {
         "streaming": _capture_task is not None and not _capture_task.done(),
-        "connected_clients": len(manager.active_connections),
+        "connected_clients": len(manager._clients),
         "fps": settings.CAPTURE_FPS,
     }
 
 
 @app.get("/")
 async def index():
-    return FileResponse("static/index.html")
+    return FileResponse(BASE_DIR / "static" / "index.html")
 
 
 if __name__ == "__main__":

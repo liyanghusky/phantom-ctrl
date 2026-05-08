@@ -14,14 +14,12 @@ class ConnectionManager:
         self._clients.discard(ws)
 
     async def broadcast(self, data: bytes):
-        dead: set[WebSocket] = set()
+        clients = list(self._clients)
         results = await asyncio.gather(
-            *[ws.send_bytes(data) for ws in self._clients],
+            *[ws.send_bytes(data) for ws in clients],
             return_exceptions=True,
         )
-        for ws, result in zip(list(self._clients), results):
-            if isinstance(result, Exception):
-                dead.add(ws)
+        dead = {ws for ws, result in zip(clients, results) if isinstance(result, Exception)}
         self._clients -= dead
 
 

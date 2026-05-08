@@ -13,3 +13,6 @@ class Settings:
 
 
 settings = Settings()
+
+if not settings.SECRET_TOKEN:
+    raise RuntimeError("SECRET_TOKEN must be set in .env")

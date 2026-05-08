@@ -24,7 +24,7 @@ def _click(x_ratio: float, y_ratio: float, button: str) -> None:
 def _type(text: str) -> None:
     if len(text) > 256:
         raise ValueError(f"text length must be <= 256, got {len(text)}")
-    text = re.sub(r"[\x00-\x08\x0b-\x1f]", "", text)
+    text = re.sub(r"[\x00-\x09\x0b-\x1f]", "", text)
     if text.isascii():
         pyautogui.typewrite(text, interval=0.02)
     else:
